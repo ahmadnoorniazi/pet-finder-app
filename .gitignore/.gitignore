@@ -1,8 +1,8 @@
 
 #node_modules
-#.cache/
-#dist/
-#.env
-#.DS_Store
-#coverage/
-#.vscode/
+.cache/
+dist/
+.env
+.DS_Store
+coverage/
+.vscode/

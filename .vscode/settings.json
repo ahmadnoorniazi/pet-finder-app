@@ -1,0 +1,5 @@
+{
+  "editor.fontFamily": "\"Dank Mono\"",
+  "prettier.requireConfig": true,
+  "editor.formatOnSave": true
+}

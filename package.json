@@ -1,7 +1,7 @@
 {
   "name": "adopt-me",
   "version": "1.0.0",
-  "description": "An app to teach you to write React",
+  "description": "An app to learn React",
   "main": "src/App.js",
   "scripts": {
     "test": "",

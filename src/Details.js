@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import pf from "petfinder-client";
 import Carousel from "./Carousel";
 import Modal from "./Modal";
@@ -7,71 +7,62 @@ const petfinder = pf({
   key: process.env.API_KEY,
   secret: process.env.API_SECRET
 });
-class Details extends Component {
-  state = {
-    loading: true,
-    showModal: false
-  };
-  toggleModal = () => this.setState({ showModal: !this.state.showModal });
+function Details(props){
+  const [loading, setLoading] = useState(true)
+  const [showModal, setShowModel] = useState(false)
+  const [name, setName] = useState("")
+  const [animal, setAnimal] = useState("")
+  const [location, setLocation] = useState("")
+  const [description, setDescription] = useState("")
+  const [media, setMedia] = useState("")
+  const [breed, setBreed] = useState("")
 
-  componentDidMount() {
-    petfinder.pet
-      .get({
-        output: "full",
-        id: this.props.id
-      })
-      .then(data => {
-        let breed;
-        const pet = data.petfinder.pet;
-        if (Array.isArray(pet.breeds.breed)) {
-          breed = pet.breeds.breed.join(",");
-        } else {
-          breed = pet.breeds.breed;
-        }
-
-        this.setState({
-          name: pet.name,
-          animal: pet.animal,
-          location: `${pet.contact.city},  ${pet.contact.state}`,
-          description: pet.description,
-          media: pet.media,
-          breed,
-          loading: false
-        });
-      });
+  function toggleModal(){
+    setShowModel(!showModal);
   }
 
-  render() {
-    if (this.state.loading) {
-      return <h1>loading ....</h1>;
-    }
+  function fetchData(){
+     petfinder.pet.get({
+      output: "full",
+      id: props.id
+    }).then(data => {
+      let breed;
+      const pet = data.petfinder.pet;
+      if (Array.isArray(pet.breeds.breed)) {
+        breed = pet.breeds.breed.join(",");
+      } else {
+        breed = pet.breeds.breed;
+      }
+      setAnimal(pet.animal)
+      setName(pet.name)
+      setLocation(`${pet.contact.city},  ${pet.contact.state}`)
+      setDescription(pet.description)
+      setMedia(pet.media)
+      setBreed(breed)
+      setLoading(false)
+    })
+  }
 
-    const {
-      media,
-      animal,
-      name,
-      breed,
-      location,
-      description,
-      showModal
-    } = this.state;
-
+  useEffect( () => {
+    fetchData()
+  },[])
     return (
+      loading ? <h1>loading ....</h1> :
       <div className="details">
         <Carousel media={media} />
         <div>
-          <h1 ref={el => (this.mYh1 = el)}>{name}</h1>
+          <h1>{name}</h1>
           <h2>
             {animal} - {breed} - {location}
           </h2>
-          <button onClick={this.toggleModal}>Adopt {name}</button>;
+          <button onClick={toggleModal}>Adopt {name}</button>;
           <p>{description}</p>
           {showModal ? (
             <Modal>
               <h1>Would you like to adopt {name}?</h1>
               <div className="buttons">
-                <button onClick={this.toggleModal}>Yes</button>
-                <button onClick={this.toggleModal}>No</button>
+                <button onClick={toggleModal}>Yes</button>
+                <button onClick={toggleModal}>No</button>
               </div>
             </Modal>
           ) : null}
@@ -79,6 +70,5 @@ class Details extends Component {
       </div>
     );
   }
-}
 
 export default Details;

@@ -1,9 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "@reach/router";
 
-class Pet extends Component {
-  render() {
-    const { name, animal, breed, media, location, id } = this.props;
+function  Pet({name, animal, breed, media, location, id}) {
     let photos = [];
 
     if (media && media.photos && media.photos.photo) {
@@ -24,6 +22,5 @@ class Pet extends Component {
       </Link>
     );
   }
-}
 
 export default Pet;

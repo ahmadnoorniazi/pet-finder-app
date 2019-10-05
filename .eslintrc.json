@@ -9,12 +9,11 @@
   ],
   "rules": {
     "react/prop-types": 0,
-    "jsx-a11y/label-has-for": 0,
-    "no-console": 1,
-    "space-before-function-paren": "warn"
+    "react-hooks/rules-of-hooks": "error",
+    "no-console": "warn"
   },
-  "plugins": ["react", "import", "jsx-a11y"],
   "parser": "babel-eslint",
+  "plugins": ["react", "import", "jsx-a11y", "react-hooks"],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
@@ -26,5 +25,10 @@
     "es6": true,
     "browser": true,
     "node": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

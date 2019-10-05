@@ -1,67 +1,25 @@
 import React, { useState } from "react";
-import { render } from "react-dom";
-import pf from "petfinder-client";
-import { Provider } from "./SearchContext";
-import Main from "./Main";
+import ReactDOM from "react-dom";
+import { Router, Link } from "@reach/router";
+import Details from "./Details";
+import SearchParams from "./SearchParams";
+import ThemeContext from "./ThemeContext";
 
-const petfinder = pf({
-  key: process.env.API_KEY,
-  secret: process.env.API_SECRET
-});
-
-export default function App() {
-  const [location, setLocation] = useState("Seattle, WA");
-  const [animal, setAnimal] = useState("");
-  const [breed, setBreed] = useState("");
-  const [breeds, setBreeds] = useState([]);
-
-  function handleLocationChange(event) {
-    setLocation(event.target.value);
-  }
-
-  function handleAnimalChange(event) {
-    setAnimal(event.target.value);
-    setBreed("");
-    getBreeds();
-  }
-
-  function handleBreedChange(event) {
-    setBreed(event.target.value);
-  }
-
-  function getBreeds() {
-    if (animal) {
-      petfinder.breed
-        .list({
-          animal: animal
-        })
-        .then(data => {
-          if (
-            data.petfinder &&
-            data.petfinder.breeds &&
-            Array.isArray(data.petfinder.breeds.breed)
-          ) {
-            setBreeds(data.petfinder.breeds.breed);
-          } else {
-            setBreeds([]);
-          }
-        });
-    }
-  }
-  const searchContext = {
-    location,
-    animal,
-    breed,
-    breeds,
-    handleAnimalChange,
-    handleBreedChange,
-    handleLocationChange,
-    getBreeds
-  };
+const App = () => {
+  const theme = useState("darkblue");
   return (
-    <Provider value={searchContext}>
-      <Main />
-    </Provider>
+    <ThemeContext.Provider value={theme}>
+      <div>
+        <header>
+          <Link to="/">Adopt Me!</Link>
+        </header>
+        <Router>
+          <SearchParams path="/" />
+          <Details path="/details/:id" />
+        </Router>
+      </div>
+    </ThemeContext.Provider>
   );
-}
-render(React.createElement(App), document.getElementById("root"));
+};
+
+ReactDOM.render(<App />, document.getElementById("root"));

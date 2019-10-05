@@ -1,43 +1,45 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 
-function Carousel({media}){
-  const [pics, setPics] = useState([])
-  const [active, setActive] = useState(0)
-  const [prevState, setPrevState] = useState(null)
-
-  useEffect(() => getPhotos(), [media])
-
-  function handleIndexClick(event){
-    setActive(+event.target.dataset.index);
+class Carousel extends React.Component {
+  state = {
+    photos: [],
+    active: 0
   };
+  static getDerivedStateFromProps({ media }) {
+    let photos = ["http://placecorgi.com/600/600"];
 
-function getPhotos(){
-  // let mediaArray = media
-  let photos = []
-  if (prevState !== media &&  media && media.photos && media.photos.photo) {
-    photos = (media.photos.photo.filter(photo => photo["@size"] === "pn"))
-    setPrevState(media)
+    if (media.length) {
+      photos = media.map(({ large }) => large);
+    }
+
+    return { photos };
   }
-  return setPics(photos)
-}
-   return (
+  handleIndexClick = event => {
+    this.setState({
+      active: +event.target.dataset.index
+    });
+  };
+  render() {
+    const { photos, active } = this.state;
+    return (
       <div className="carousel">
-        <img src={pics.length ? pics[active].value : ""} alt="animal" />
-          <div className="carousel-smaller">
-            {pics.map((photo, index) => (
-              /* eslint-disable-next-line */
-              <img
-                onClick={handleIndexClick}
-                data-index={index}
-                key={photo.value}
-                src={photo.value}
-                className={index === active ? "active" : ""}
-                alt="animal thumnbail"
-              />
-            ))}
-          </div>
+        <img src={photos[active]} alt="animal" />
+        <div className="carousel-smaller">
+          {photos.map((photo, index) => (
+            // eslint-disable-next-line
+            <img
+              key={photo}
+              onClick={this.handleIndexClick}
+              data-index={index}
+              src={photo}
+              className={index === active ? "active" : ""}
+              alt="animal thumbnail"
+            />
+          ))}
+        </div>
       </div>
     );
   }
+}
 
 export default Carousel;
